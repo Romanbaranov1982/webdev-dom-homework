@@ -71,6 +71,9 @@
     const textAdd = document.getElementById("com-form");
     const nameCom = document.getElementById("name-form");
     let data = new Date().toLocaleString();
+    const likesCounter = document.querySelectorAll('.likes-counter');
+    const pushLikes = document.querySelectorAll(".like-button");
+    console.log(pushLikes);
 
     buttonElement.addEventListener("click", () => {
 const oldCode = listElement.innerHTML;
@@ -90,12 +93,13 @@ listElement.innerHTML = oldCode +
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">0</span>
-              <button class="like-button -active-like"></button>
+              <button class="like-button"></button>
             </div>
           </div>
         </li> `;
         textAdd.value = "";
         nameCom.value = "";
+        likesCounter.value = 0;
     });
     console.log("It works!");
   </script>

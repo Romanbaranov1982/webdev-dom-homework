@@ -56,7 +56,7 @@
  // создаем рендер функцию
   const renderCards = () => {
       const cardsHtml = cards
-        .map((card, index) => {
+        .map((card) => {
           return `<li class="comment">
           <div class="comment-header">
             <div>${card.name}</div>
@@ -76,32 +76,41 @@
         .join("");
 
       listElement.innerHTML = cardsHtml;
-  
+  console.log(cardsHtml);
       };
       renderCards();
 
     buttonElement.addEventListener("click", () => {
-const oldCode = listElement.innerHTML;
+// const oldCode = listElement.innerHTML;
 if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
+  cards.push({
+    name: nameCom.value,
+    time: data,
+    comment: textAdd.value 
+  });
 };
-listElement.innerHTML = oldCode + 
-`<li class="comment">
-          <div class="comment-header">
-            <div>${nameCom.value}</div>
-            <div>${data}</div>
-          </div>
-                  <div class="comment-body">
-            <div class="comment-text">${textAdd.value}</div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li> `;
+// удалили старую склейку
+// listElement.innerHTML = oldCode + 
+// `<li class="comment">
+//           <div class="comment-header">
+//             <div>${nameCom.value}</div>
+//             <div>${data}</div>
+//           </div>
+//                   <div class="comment-body">
+//             <div class="comment-text">${textAdd.value}</div>
+//           </div>
+//           <div class="comment-footer">
+//             <div class="likes">
+//               <span class="likes-counter">0</span>
+//               <button class="like-button"></button>
+//             </div>
+//           </div>
+//         </li> `;
+
+// но теперь не работает обработчик клика
+        renderCards();      
         textAdd.value = "";
         nameCom.value = "";
         likesCounter.value = 0;

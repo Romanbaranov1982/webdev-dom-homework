@@ -8,40 +8,7 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
+       <!-- рендерится из JS -->
       </ul>
       <div class="add-form">
         <input id="name-form"
@@ -74,6 +41,44 @@
     const likesCounter = document.querySelectorAll('.likes-counter');
     const pushLikes = document.querySelectorAll(".like-button");
     console.log(pushLikes);
+// создали массив
+    const cards = [ {
+      name: "Глеб Фокин",
+      time: "12.02.22 12:18",
+      comment: "Это будет первый комментарий на этой странице"
+    },
+    {
+      name: "Варвара Н",
+      time: "13.02.22 19:22",
+      comment: "Мне нравится как оформлена эта страница! ❤"
+    },
+  ];
+ // создаем рендер функцию
+  const renderCards = () => {
+      const cardsHtml = cards
+        .map((card, index) => {
+          return `<li class="comment">
+          <div class="comment-header">
+            <div>${card.name}</div>
+            <div>${card.time}</div>
+          </div>
+                  <div class="comment-body">
+            <div class="comment-text">${card.comment}</div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+        </li> `;
+        })
+        .join("");
+
+      listElement.innerHTML = cardsHtml;
+  
+      };
+      renderCards();
 
     buttonElement.addEventListener("click", () => {
 const oldCode = listElement.innerHTML;

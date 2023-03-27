@@ -38,17 +38,18 @@
     const textAdd = document.getElementById("com-form");
     const nameCom = document.getElementById("name-form");
     let data = new Date().toLocaleString();
-    
+         const likesCounter = document.querySelectorAll('.likes-counter');
     
     // console.log(pushLikes);
 //  добавляем лайки
-//     const doLik = () => {
-//       const pushLikes = document.querySelectorAll(".like-button");
-//       const likesCounter = document.querySelectorAll('.likes-counter');
-//       pushLikes.addEventListener("click", () => {
-// pushLikes.cl
-//       });
-//     }
+  const pushLikes = document.querySelectorAll(".like-button");
+ 
+      for (const pushLike of pushLikes) {
+         pushLike.addEventListener('click', () => {
+pushLike.classList.toggle('-active-like');
+      });
+      };
+    
 
 // создали массив
     const cards = [ {
@@ -87,20 +88,20 @@
       listElement.innerHTML = cardsHtml;
   
       };
-      // renderCards();
+      
 
     buttonElement.addEventListener("click", () => {
-// const oldCode = listElement.innerHTML;
+
  
 if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
+    }
   cards.push({
     name: nameCom.value,
     time: data,
-    comment: textAdd.value ,
-  });
-};
+    comment: textAdd.value 
+});
 
 // удалили старую склейку
 // listElement.innerHTML = oldCode + 
@@ -121,7 +122,7 @@ if (textAdd.value === "" || nameCom.value === ""){
 //         </li> `;
 
 // но теперь не работает обработчик клика
-// renderCards();  
+renderCards();  
         textAdd.value = "";
         nameCom.value = "";
         // likesCounter.value = 0;

@@ -38,29 +38,23 @@
     const textAdd = document.getElementById("com-form");
     const nameCom = document.getElementById("name-form");
     let data = new Date().toLocaleString();
-         const likesCounter = document.querySelectorAll('.likes-counter');
+    // const commentElements = document.querySelectorAll(".comment");    
     
-    // console.log(pushLikes);
-//  добавляем лайки
-  const pushLikes = document.querySelectorAll(".like-button");
- 
-      for (const pushLike of pushLikes) {
-         pushLike.addEventListener('click', () => {
-pushLike.classList.toggle('-active-like');
-      });
-      };
+
     
 
 // создали массив
     const cards = [ {
       name: "Глеб Фокин",
       time: "12.02.22 12:18",
-      comment: "Это будет первый комментарий на этой странице"
+      comment: "Это будет первый комментарий на этой странице",
+      likesComment: 3
     },
     {
       name: "Варвара Н",
       time: "13.02.22 19:22",
-      comment: "Мне нравится как оформлена эта страница! ❤"
+      comment: "Мне нравится как оформлена эта страница! ❤",
+      likesComment: 3
     },
   ];
  // создаем рендер функцию
@@ -77,22 +71,17 @@ pushLike.classList.toggle('-active-like');
           </div>
           <div class="comment-footer">
             <div class="likes">
-              <span class="likes-counter">0</span>
+              <span class="likes-counter" >${card.likesComment}</span> 
               <button class="like-button"></button>
             </div>
           </div>
         </li> `;
         })
         .join("");
+      listElement.innerHTML = cardsHtml;  
+      };    
 
-      listElement.innerHTML = cardsHtml;
-  
-      };
-      
-
-    buttonElement.addEventListener("click", () => {
-
- 
+    buttonElement.addEventListener("click", () => { 
 if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
@@ -100,33 +89,36 @@ if (textAdd.value === "" || nameCom.value === ""){
   cards.push({
     name: nameCom.value,
     time: data,
-    comment: textAdd.value 
+    comment: textAdd.value,
+    likesComment: 0 
 });
-
-// удалили старую склейку
-// listElement.innerHTML = oldCode + 
-// `<li class="comment">
-//           <div class="comment-header">
-//             <div>${nameCom.value}</div>
-//             <div>${data}</div>
-//           </div>
-//                   <div class="comment-body">
-//             <div class="comment-text">${textAdd.value}</div>
-//           </div>
-//           <div class="comment-footer">
-//             <div class="likes">
-//               <span class="likes-counter">0</span>
-//               <button class="like-button"></button>
-//             </div>
-//           </div>
-//         </li> `;
-
-// но теперь не работает обработчик клика
 renderCards();  
+likeButtonsPush();
         textAdd.value = "";
         nameCom.value = "";
-        // likesCounter.value = 0;
+      
     });
+
+
+       //     //  делаю лайки
+const likeButtonsPush = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener('click', () => {
+      const index = likeButton.dataset.like;
+      if (likeButton.classList.contains("like-button")) {
+        likeButton.classList.toggle("-active-like");      
+        cards[index].likesComment +=1;
+        renderCards();
+      } else {       
+        likeButton.classList.add("like-button");
+        cards[index].likesComment -=1;
+      }
+      renderCards();
+    });
+  };
+  };
+likeButtonsPush();
     renderCards();   
     console.log("It works!");
   </script>

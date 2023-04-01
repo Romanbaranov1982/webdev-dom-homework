@@ -109,14 +109,15 @@ const likeButtonsPush = () => {
   for (const likeButton of likeButtons) {
     likeButton.addEventListener('click', () => {
       const index = likeButton.dataset.like;
-      if (likeButton.classList.contains("like-button")) {
-        likeButton.classList.toggle("-active-like");      
+      if (cards[index].likedComment === "like-button") {
         cards[index].likesComment +=1;
-        renderCards();
-      } else {       
-        likeButton.classList.add("like-button");
+        cards[index].likedComment = "like-button -active-like";
+        
+      } else {
         cards[index].likesComment -=1;
-      }
+        cards[index].likedComment = "like-button";card
+      renderCards();
+      };
       renderCards();
     });
   };

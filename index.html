@@ -48,13 +48,15 @@
       name: "Глеб Фокин",
       time: "12.02.22 12:18",
       comment: "Это будет первый комментарий на этой странице",
-      likesComment: 3
+      likesComment: 3,
+      likedComment: "like-button",
     },
     {
       name: "Варвара Н",
       time: "13.02.22 19:22",
       comment: "Мне нравится как оформлена эта страница! ❤",
-      likesComment: 3
+      likesComment: 3,
+      likedComment: "like-button",
     },
   ];
  // создаем рендер функцию
@@ -90,7 +92,8 @@ if (textAdd.value === "" || nameCom.value === ""){
     name: nameCom.value,
     time: data,
     comment: textAdd.value,
-    likesComment: 0 
+    likesComment: 0 ,
+    likedComment: "like-button",
 });
 renderCards();  
 likeButtonsPush();

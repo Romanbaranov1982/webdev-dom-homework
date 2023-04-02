@@ -1,58 +1,218 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Книжки</title>
+    <title>Проект "Комменты"</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
-    <div id="books">Заглушка</div>
-    <button id="show-button">Посмотреть книги</button>
+    <div class="container">
+      <ul class="comments" id="list">
+       <!-- рендерится из JS -->
+      </ul>
+      <div class="add-form">
+        <input id="name-form"
+          type="text"
+          class="add-form-name"
+          placeholder="Введите ваше имя"
+          value=""
+        />
+        <textarea 
+          type="textarea"
+          class="add-form-text"
+          placeholder="Введите ваш коментарий"
+          rows="4"
+      id="com-form"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button" id="add-button">Написать</button>
+        </div>
+      </div>
+    </div>
   </body>
 
   <script>
-    const books = [
-      {
-        title: "Искусство программирования",
-        price: 1300,
-      },
-      {
-        title: "Тихо!",
-        price: 700,
-      },
-      {
-        title: "Ночной дозор",
-        price: 980,
-      },
-    ];
-
-    let totalPrice = 0;
-for (const book of books) {
-    totalPrice += book.price;
-};
-    /* Допишите код: используйте цикл for...of, чтобы посчитать общую стоимость книг в массиве books */
-
-    // Должен выводить в консоль 2980
-    console.log(totalPrice);
-
-    /* Допишите код: используйте методы массива map + join, чтобы получить строчку — список всех книг через запятую */
-    const booksList = books.map(item =>  item.title).join( ' ,') ;
-
-    // Должен выводить строку "Искусство программирования, Тихо!, Ночной дозор"
-    console.log(booksList)
-
-    /*
-     * Допишите код:
-     * Используйте document.getElementById, innerHtml и addEventListener,
-     * чтобы при клике на кнопку текст «Заглушка» на странице изменялся на
-     * «Искусство программирования, Тихо!, Ночной дозор = 2980 рублей»
-     * */
-    const buttonElement = document.getElementById('show-button');
-    const text = document.getElementById('books');
   
-    buttonElement.addEventListener("click", ( )=> {
-        
-        text.innerHTML = ` ${booksList} = ${totalPrice}`;
+  const buttonElement = document.getElementById("add-button");
+const listElement = document.getElementById("list");
+const nameInputElement = document.getElementById("name-input");
+const textInputElement = document.getElementById("text-input");
+const currentDate = new Date().toLocaleString();
+const deleteButton = document.getElementById("del-button");
+const commentElements = document.querySelectorAll(".comment");
+const likeButtonsListeners = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+// console.log(likeButtons);
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener('click', () => {
+      const index = likeButton.dataset.like;
+      if (comments[index].likedComment === "like-button") {
+        comments[index].likesComment +=1;
+        comments[index].likedComment = "like-button -active-like";
+
+      } else {
+        comments[index].likesComment -=1;
+        comments[index].likedComment = "like-button";  
+      }
+      renderComments();
     });
-    
+  }  
+};
+
+const comments = [{
+    nameComment: "Глеб Фокин",
+    textComment: "Это будет первый комментарий на этой странице",
+    dateComment: "12.02.22 12:18",
+    likesComment: 3,
+    likedComment: "like-button",
+  },
+  {
+    nameComment: "Варвара Н.",
+    textComment: "Мне нравится как оформлена эта страница! ❤",
+    dateComment: "13.02.22 19:22",
+    likesComment: 75,
+    likedComment: "like-button",
+  }
+];
+
+const renderComments = () => {
+  const commentsHtml = comments.map((comment, index) => {
+    return `<li class="comment" data-name="${comment.nameComment}">
+    <div class="comment-header">
+      <div>${comment.nameComment}</div>
+      <div>${comment.dateComment}</div>
+    </div>
+    <div class="comment-body">
+      <div class="comment-text">
+        ${comment.textComment}
+      </div>
+    </div>
+    <div class="comment-footer">
+      <div class="likes">
+        <span class="likes-counter">${comment.likesComment}</span>      
+        <button class="like-button ${comment.likedComment}" data-like="${index}"></button>
+      </div>
+    </div>
+  </li>`;
+  }).join('');
+  listElement.innerHTML = commentsHtml;
+  likeButtonsListeners();
+
+  // nameInputElement.addEventListener("input", inputCheck);
+  // textInputElement.addEventListener("input", inputCheck);
+  // nameInputElement.addEventListener("keyup", ({
+  //   key
+  // }) => {
+  //   if (key === "Enter") {
+  //     nameInputElement.classList.remove("error");
+  //     if (nameInputElement.value === "") {
+  //       nameInputElement.classList.add("error");
+  //       return;
+  //     } else if (textInputElement.value === "") {
+  //       textInputElement.classList.add("error");
+  //       return;
+  //     }
+  //     renderComments();
+  //   }
+
+  // });
+
+  // textInputElement.addEventListener("keyup", ({
+  //   key
+  // }) => {
+  //   if (key === "Enter") {
+  //     textInputElement.classList.remove("error");
+  //     if (textInputElement.value === "") {
+  //       textInputElement.classList.add("error");
+  //       return;
+  //     } else if (nameInputElement.value === "") {
+  //       nameInputElement.classList.add("error");
+  //       return;
+  //     }
+  //     renderComments();
+  //   }
+
+  // });
+
+};
+
+renderComments();
+buttonElement.addEventListener('click', () => {
+  // // if (textInputElement.value == "" || nameInputElement.value == ""){
+  // // alert("Заполните все поля");
+  // // return;
+  // // nameInputElement.classList.remove("error");
+  
+  // if (nameInputElement.value === "") {
+  //   // nameInputElement.classList.add("error");
+  //   alert("Введите корректные данные");
+  //   return;
+  // } else if (textInputElement.value === "") {
+  //   alert("Введите корректные данные");
+  //   return;
+  // } 
+  comments.push({
+    nameComment: nameInputElement.value,
+    textComment: textInputElement.value,
+    dateComment: currentDate,
+    likesComment: 0,
+    likedComment: "like-button",
+  });
+  renderComments();
+});
+renderComments();
+// function inputCheck() {
+//   buttonElement.classList.remove("turn-off");
+//   if (document.getElementById("name-input").value === "" || document.getElementById("text-input").value === "") {
+//     document.getElementById("add-button").disabled = true;
+//     buttonElement.classList.add("turn-off");
+//   } else {
+//     document.getElementById("add-button").disabled = false;
+//     buttonElement.classList.remove("turn-off");
+//   }
+// }
+// nameInputElement.addEventListener("input", inputCheck);
+// textInputElement.addEventListener("input", inputCheck);
+// nameInputElement.addEventListener("keyup", ({
+//   key
+// }) => {
+//   if (key === "Enter") {
+//     nameInputElement.classList.remove("error");
+//     if (nameInputElement.value === "") {
+//       nameInputElement.classList.add("error");
+//       return;
+//     } else if (textInputElement.value === "") {
+//       textInputElement.classList.add("error");
+//       return;
+//     }
+//     renderComments();
+//   }
+// });
+// textInputElement.addEventListener("keyup", ({
+//   key
+// }) => {
+//   if (key === "Enter") {
+//     textInputElement.classList.remove("error");
+//     if (textInputElement.value === "") {
+//       textInputElement.classList.add("error");
+//       return;
+//     } else if (nameInputElement.value === "") {
+//       nameInputElement.classList.add("error");
+//       return;
+//     }
+//     renderComments();
+//   }
+// });
+
+
+
+
+
+// //кнопка удаления
+// deleteButton.addEventListener('click', () => {
+//   listElement.lastElementChild.remove(`${textInputElement.value}`);
+// });
+
+    console.log("It works!");
   </script>
 </html>

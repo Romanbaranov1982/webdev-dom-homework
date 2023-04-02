@@ -32,7 +32,7 @@
   </body>
 
   <script>
-  
+  // переменные
     const buttonElement = document.getElementById("add-button");
     const listElement = document.getElementById("list");
     const textAdd = document.getElementById("com-form");
@@ -47,14 +47,14 @@
       time: "12.02.22 12:18",
       comment: "Это будет первый комментарий на этой странице",
       likesComment: 3,
-      likedComment: "like-button",
+      likedStatus: "like-button",
     },
     {
       name: "Варвара Н",
       time: "13.02.22 19:22",
       comment: "Мне нравится как оформлена эта страница! ❤",
       likesComment: 3,
-      likedComment: "like-button",
+      likedStatus: "like-button -active-like",
     },
   ];   
    
@@ -73,7 +73,7 @@
           <div class="comment-footer"> 
             <div class="likes">
               <span class="likes-counter">${card.likesComment}</span>  
-              <button class="like-button ${card.likedComment}" data-like="${index}"></button>
+              <button class="like-button ${card.likedStatus}" data-like="${index}"></button>
             </div>
           </div>
         </li> `;
@@ -82,9 +82,10 @@
       listElement.innerHTML = cardsHtml;  
       // console.log(listElement.innerHTML);
     //  likeButtonsPush(); 
-      }; 
-            
+      };             
 renderCards();
+
+
 // лайки
     const likeButtonsPush = () => {
   const likeButtons = document.querySelectorAll(".like-button");
@@ -92,25 +93,21 @@ renderCards();
   for (const likeButton of likeButtons) {
     likeButton.addEventListener('click', () => {
       const index = likeButton.dataset.like;
-      if (cards[index].likedComment === "like-button") {
+      if (cards[index].likedStatus === "like-button") {
         cards[index].likesComment +=1;
-        cards[index].likedComment = "like-button -active-like";
-        renderCards();
-      } else {
+        cards[index].likedStatus = "like-button -active-like";
+        
+      } else if (cards[index].likedStatus === "like-button -active-like"){
         cards[index].likesComment -=1;
-        cards[index].likedComment = "like-button";
-       renderCards();
+        cards[index].likedStatus = "like-button";
+       
       };
-     
+     renderCards();
     });
     
   };
-  };
-likeButtonsPush();
-    // renderCards();   
-
-
- 
+    };
+likeButtonsPush();  
 
 
       // добавление коментариев
@@ -124,7 +121,7 @@ if (textAdd.value === "" || nameCom.value === ""){
     time: data,
     comment: textAdd.value,
     likesComment: 0 ,
-    likedComment: "like-button",
+    likedStatus: "like-button",
 });
 renderCards();  
 likeButtonsPush();
@@ -132,10 +129,6 @@ likeButtonsPush();
         nameCom.value = "";
       
     });
-
-
-
-
     console.log("It works!");
   </script>
 </html>

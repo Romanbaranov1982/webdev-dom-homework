@@ -40,7 +40,7 @@
     let data = new Date().toLocaleString();
     const deleteButton = document.getElementById("del-button");
     const commentElements = document.querySelectorAll(".comment");
-    // const jS =   textAdd.value + y; 
+    const likeBtns = document.querySelectorAll('.likes');
 
   // создали массив
     const cards = [ {
@@ -83,8 +83,8 @@
         })
         .join("");
       listElement.innerHTML = cardsHtml;  
-      // console.log(listElement.innerHTML);
-    //  likeButtonsPush(); 
+      
+    
       };             
 renderCards();
 
@@ -133,6 +133,9 @@ if (textAdd.value === "" || nameCom.value === ""){
 renderCards();  
 likeButtonsPush();
 cardsAnswerFunc();
+shutdownReplayFunc();  
+
+
         textAdd.value = "";
         nameCom.value = "";
       
@@ -145,20 +148,26 @@ for (const commentAwr of commentAwrs ) {
   commentAwr.addEventListener('click', () =>{
   const y = commentAwr.dataset.text;   
  const jS =   textAdd.value + y;
-// cards[y].comment += y;
-// card.comment += y;
-    //  console.log(cardsAnswerFunc.innerHTML);
-// console.log(jS);
-textAdd.innerHTML = jS;
-
-     
+console.log(jS);
+textAdd.innerHTML = jS;  
+// console.log(1);  
   });
+  
 }
     };
-    cardsAnswerFunc();
-    // renderCards();
-
-
+renderCards();
+   
+    // отключение функции replay
+    const shutdownReplayFunc = () => {
+      const likeBtns = document.querySelectorAll('.likes');
+      for (const likeBtn of likeBtns) {
+        likeBtn.addEventListener('click', (event) =>{
+          event.stopPropagation();                            
+        });       
+      };
+    };
+ shutdownReplayFunc();  
+cardsAnswerFunc();
     console.log("It works!");
   </script>
 </html>

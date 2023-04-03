@@ -25,7 +25,7 @@
       id="com-form"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button" id="add-button">Написать</button>
+          <button class="add-form-button" id="add-button">Написать </button>
         </div>
       </div>
     </div>
@@ -67,11 +67,12 @@
         .map((card, index, jS, y) => {
           return `<li class="comment" data-text=" > ${card.comment} , ${card.name} < "> <br>
           <div class="comment-header">
-            <div >${card.name}</div>
+            <div >${card.name} </div>
             <div>${card.time}</div>
           </div>
                   <div class="comment-body">
-            <div class="comment-text" >${card.comment}</div>
+  
+            <div style="white-space: pre-line" class="comment-text"  >${card.comment}</div>
           </div>
           <div class="comment-footer"> 
             <div class="likes">
@@ -123,9 +124,11 @@ if (textAdd.value === "" || nameCom.value === ""){
   return;
     }
   cards.push({
-    name: nameCom.value,
+    name: nameCom.value.replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;"),       
     time: data,
-    comment:  textAdd.value,
+    comment:  textAdd.value.replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;"),
     likesComment: 0 ,
     likedStatus: "like-button",
     
@@ -146,13 +149,15 @@ shutdownReplayFunc();
 const commentAwrs = document.querySelectorAll('.comment')
 for (const commentAwr of commentAwrs ) {
   commentAwr.addEventListener('click', () =>{
-  const y = commentAwr.dataset.text;   
+  const y = commentAwr.dataset.text; 
+  y.value = y.replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;") ; 
  const jS =   textAdd.value + y;
 console.log(jS);
 textAdd.innerHTML = jS;  
-// console.log(1);  
-  });
-  
+  });  
 }
     };
 renderCards();
@@ -163,11 +168,14 @@ renderCards();
       for (const likeBtn of likeBtns) {
         likeBtn.addEventListener('click', (event) =>{
           event.stopPropagation();                            
-        });       
+        }); 
+  
       };
     };
+  // likeButtonsPush();
  shutdownReplayFunc();  
 cardsAnswerFunc();
+
     console.log("It works!");
   </script>
 </html>

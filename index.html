@@ -32,77 +32,92 @@
   </body>
 
   <script>
-  
+  // переменные
     const buttonElement = document.getElementById("add-button");
     const listElement = document.getElementById("list");
-    let textAdd = document.getElementById("com-form");
+    const textAdd = document.getElementById("com-form");
     const nameCom = document.getElementById("name-form");
     let data = new Date().toLocaleString();
-     
-    // const commentElements = document.querySelectorAll('.comment');
-    // console.log(commentElements);
+    const deleteButton = document.getElementById("del-button");
+    const commentElements = document.querySelectorAll(".comment");
+    // const jS =   textAdd.value + y; 
 
-   ;
-
-// создали массив
+  // создали массив
     const cards = [ {
       name: "Глеб Фокин",
       time: "12.02.22 12:18",
-      comment: "Это будет первый комментарий на этой странице",
+      comment: "Это будет первый комментарий на этой странице" ,
       likesComment: 3,
-      likedComment: "like-button",
+      likedStatus: "like-button",
+      // answer:
     },
     {
       name: "Варвара Н",
       time: "13.02.22 19:22",
       comment: "Мне нравится как оформлена эта страница! ❤",
       likesComment: 3,
-      likedComment: "like-button"
+      likedStatus: "like-button -active-like",
+
     },
-  ];
- // создаем рендер функцию
+  ];   
+   
+  // создаем рендер функцию
   const renderCards = () => {
       const cardsHtml = cards
-        .map((card, index, i) => {
-          return `<li class="comment">
+        .map((card, index, jS, y) => {
+          return `<li class="comment" data-text=" > ${card.comment} , ${card.name} < "> <br>
           <div class="comment-header">
-            <div>${card.name}</div>
+            <div >${card.name}</div>
             <div>${card.time}</div>
           </div>
                   <div class="comment-body">
-            <div class="comment-text" data-answer="${card.comment}">${card.comment}</div>
+            <div class="comment-text" >${card.comment}</div>
           </div>
           <div class="comment-footer"> 
-            <div class="likes" >
-              <span class="likes-counter" data-like="${index}">${card.likesComment}</span> 
-              <button class="like-button"></button>
+            <div class="likes">
+              <span class="likes-counter">${card.likesComment}</span>  
+              <button class="like-button ${card.likedStatus}" data-like="${index}"></button>
             </div>
           </div>
         </li> `;
         })
         .join("");
-      listElement.innerHTML = cardsHtml; 
+      listElement.innerHTML = cardsHtml;  
+      // console.log(listElement.innerHTML);
+    //  likeButtonsPush(); 
+      };             
+renderCards();
+
+
+
+// лайки
+    const likeButtonsPush = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener('click', () => {
+      const index = likeButton.dataset.like;
+      if (cards[index].likedStatus === "like-button") {
+        cards[index].likesComment +=1;
+        cards[index].likedStatus = "like-button -active-like";
+        
+      } else if (cards[index].likedStatus === "like-button -active-like"){
+        cards[index].likesComment -=1;
+        cards[index].likedStatus = "like-button";
        
-      };    
- //  создаем ответ на коментарии
- const commentAnswers = () => {
-  const commentElements = document.querySelectorAll('.comment');
-
-  for ( const commentElement of commentElements) {
-    commentElement.addEventListener('click', () => {
-      const i = commentElement.dataset.answer;
-     console.log(i);
-    
+      };
+     renderCards();
+     likeButtonsPush();
     });
+    
   };
-} ;
-    commentAnswers();
-    renderCards();
+    };
+likeButtonsPush();  
 
 
-
-
+      // добавление коментариев
     buttonElement.addEventListener("click", () => { 
+
 if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
@@ -110,39 +125,40 @@ if (textAdd.value === "" || nameCom.value === ""){
   cards.push({
     name: nameCom.value,
     time: data,
-    comment: textAdd.value,
-    likesComment: 1,
-    likedComment: "like-button",
+    comment:  textAdd.value,
+    likesComment: 0 ,
+    likedStatus: "like-button",
+    
 });
 renderCards();  
 likeButtonsPush();
-commentAnswers();
+cardsAnswerFunc();
         textAdd.value = "";
         nameCom.value = "";
       
     });
 
+    // ответы на комментарии
+    const cardsAnswerFunc = () => {
+const commentAwrs = document.querySelectorAll('.comment')
+for (const commentAwr of commentAwrs ) {
+  commentAwr.addEventListener('click', () =>{
+  const y = commentAwr.dataset.text;   
+ const jS =   textAdd.value + y;
+// cards[y].comment += y;
+// card.comment += y;
+    //  console.log(cardsAnswerFunc.innerHTML);
+// console.log(jS);
+textAdd.innerHTML = jS;
 
-       //     //  делаю лайки
-const likeButtonsPush = () => {
-  const likeButtons = document.querySelectorAll(".like-button");
-  for (const likeButton of likeButtons) {
-    likeButton.addEventListener('click', () => {
-      const index = likeButton.dataset.like;
-      if (cards[index].likedComment === "like-button") {
-        cards[index].likesComment +=1;
-        cards[index].likedComment = "like-button -active-like";
-        
-      } else {
-        cards[index].likesComment -=1;
-        cards[index].likedComment = "like-button";card
-      renderCards();
-      };
-    });
-  };
-  };
-likeButtonsPush();
-    renderCards();   
+     
+  });
+}
+    };
+    cardsAnswerFunc();
+    // renderCards();
+
+
     console.log("It works!");
   </script>
 </html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Урок "Асинхронность"</title>
+  </head>
+
+  <body id="body">
+    <pre style="word-wrap: break-word; white-space: pre-wrap;">{"color":"crimson"}</pre>
+    <h1 id="header">Список задач</h1>
+    <ul class="tasks" id="list">
+      <!-- Список рендерится из JS -->
+    </ul>
+    <br />
+    <div class="form">
+      <h3 class="form-title">Форма добавления</h3>
+      <div class="form-row">
+        Что нужно сделать:
+        <input
+          type="text"
+          id="text-input"
+          class="input"
+          placeholder="Выпить кофе"
+        />
+      </div>
+      <br />
+      <button class="button" id="add-button">Добавить</button>
+      <br />
+      Введите фамилию:
+      <input type="text" id="name-input" value="" >
+      <br />
+      <button class="name-btn" id="add-name">Добавить фамилию</button>
+    </div>
+  </body>
+
+  <script>
+    const buttonElement = document.getElementById("add-button");
+    const listElement = document.getElementById("list");
+    const textInputElement = document.getElementById("text-input");
+const firstPractic =document.getElementById("body");
+ 
+   
+   // первая практика
+//    const fetchPromise = fetch(
+//     'https://webdev-hw-api.vercel.app/api/tasks/random-red',
+//     {
+//       method : "GET",
+//     }
+//    );  
+ 
+//    fetchPromise.then((response) =>{
+// response.json().then((responseData) =>{
+//   console.log(responseData);
+//   firstPractic.style.backgroundColor = responseData.color;
+// })
+//    });
+   
+
+
+
+    let tasks = [];
+     // Запросы в API - асинхронные, мы не знаем как долго будет выполняться запрос
+    // Запрос может выполняться секунды и даже минуты
+    // fetch - запускает запрос в api
+    const fetchPromise = fetch("https://webdev-hw-api.vercel.app/api/todos", {
+      method: "GET"
+    });
+
+    // подписываемся на успешное завершение запроса с помощью then
+    fetchPromise.then((response) => {
+      // Запускаем преобразовываем "сырые" данные от API в json формат
+      const jsonPromise = response.json();
+
+      // Подписываемся на результат преобразования
+      jsonPromise.then((responseData) => {
+        // получили данные и рендерим их в приложении
+        tasks = responseData.todos;
+        renderTasks();
+      });
+      
+    });
+
+    const renderTasks = () => {
+      const tasksHtml = tasks
+        .map((task, index) => {
+          return `
+          <li class="task">
+            <p class="task-text">
+              ${task.text
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")}
+              <button data-index="${index}" class="button delete-button">Удалить</button>
+            </p>
+          </li>`;
+        })
+        .join("");
+
+      listElement.innerHTML = tasksHtml;
+      const deleteButtons = document.querySelectorAll(".delete-button");
+
+      // первая тренировка
+      for (const deleteButton of deleteButtons) {
+        deleteButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          deleteButton.innerHTML = "Задача удаляется";
+          setTimeout(() => {
+            const index = deleteButton.dataset.index;
+
+          tasks.splice(index, 1);
+          renderTasks();
+          }, 1000);
+          
+          
+        });
+        
+      }
+    };
+
+    renderTasks();
+// вторая тренировка
+    const headerInputPush = () => {
+      const headerInput = document.getElementById("header");
+     headerInput.addEventListener("click", () => {
+           header.innerHTML = 3;
+          //  setTimeout(() => {header.innerHTML = 2;
+          //   setTimeout(() => {header.innerHTML = 1;
+          //     setTimeout(() => {header.innerHTML = "Список задач";
+          //   },1000)
+          //   },1000)
+          // }, 1000)
+          setTimeout(()=> {header.innerHTML = 2},1000);
+          setTimeout(()=> {header.innerHTML = 1},2000);
+          setTimeout(()=> {header.innerHTML = "Список задач"},3000);
+
+    } );    
+    };
+    headerInputPush();
+
+    buttonElement.addEventListener("click", () => {
+      if (textInputElement.value === "") {
+        return;
+      }
+
+      // tasks.push({
+      //   text: textInputElement.value
+      // });
+       fetch("https://webdev-hw-api.vercel.app/api/todos", {
+      method: "POST",
+      body:JSON.stringify({
+        text: textInputElement.value,
+      })
+    }).then((response) => {
+      // Запускаем преобразовываем "сырые" данные от API в json формат
+      response.json().then((responseData) => {
+        // получили данные и рендерим их в приложении
+        tasks = responseData.todos;
+        renderTasks();
+      });
+    });
+      renderTasks();
+
+      textInputElement.value = "";
+    });  
+
+    // вторая практика
+  const addSureName = document.getElementById("add-name");
+  const inputNameElement = document.getElementById("name-input");
+  addSureName.addEventListener("click", () => {
+    if (inputNameElement.value === "") {
+        return;
+      }
+      console.log(1);
+      fetch("https://webdev-hw-api.vercel.app/api/tasks/string"), {
+      method: "POST",
+      body:JSON.stringify({
+       string : inputNameElement.value,
+      }).then((r) => {
+        response.json().then((rData) => {
+        // получили данные и рендерим их в приложении
+        tasks = responseData.string;
+      
+        renderTasks();
+      });
+      })      
+    };
+       inputNameElement.value = "";
+  });
+
+  renderTasks();
+   
+  
+  </script>
+</html>

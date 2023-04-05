@@ -82,7 +82,7 @@ const firstPractic =document.getElementById("body");
 
     const renderTasks = () => {
       const tasksHtml = tasks
-        .map((task, index) => {
+        .map((task ) => {
           return `
           <li class="task">
             <p class="task-text">
@@ -91,7 +91,7 @@ const firstPractic =document.getElementById("body");
                 .replaceAll("<", "&lt;")
                 .replaceAll(">", "&gt;")
                 .replaceAll('"', "&quot;")}
-              <button data-index="${index}" class="button delete-button">Удалить</button>
+              <button data-id="${task.id}" class="button delete-button">Удалить</button>
             </p>
           </li>`;
         })
@@ -103,22 +103,32 @@ const firstPractic =document.getElementById("body");
       // первая тренировка
       for (const deleteButton of deleteButtons) {
         deleteButton.addEventListener("click", (event) => {
-          event.stopPropagation();
-          deleteButton.innerHTML = "Задача удаляется";
-          setTimeout(() => {
-            const index = deleteButton.dataset.index;
+          event.stopPropagation();       
+         
+       
+            const id = deleteButton.dataset.id;
+//  удаляем DELETE
+fetch("https://webdev-hw-api.vercel.app/api/todos/" + id ,{
+      method: "DELETE",
+     
+    }).then((response) => {
+      // Запускаем преобразовываем "сырые" данные от API в json формат
+      response.json().then((responseData) => {
+        // получили данные и рендерим их в приложении
+      
+        tasks = responseData.todos;
 
-          tasks.splice(index, 1);
+        renderTasks();
+            });
+          });
+
           renderTasks();
-          }, 1000);
-          
-          
         });
-        
       }
     };
 
     renderTasks();
+
 // вторая тренировка
     const headerInputPush = () => {
       const headerInput = document.getElementById("header");
@@ -167,6 +177,13 @@ const firstPractic =document.getElementById("body");
     // вторая практика
   const addSureName = document.getElementById("add-name");
   const inputNameElement = document.getElementById("name-input");
+ 
+      
+      // tasks.push({
+      //   name: inputNameElement.value,
+      // })
+      
+  
   addSureName.addEventListener("click", () => {
     if (inputNameElement.value === "") {
         return;
@@ -177,9 +194,10 @@ const firstPractic =document.getElementById("body");
       body:JSON.stringify({
        string : inputNameElement.value,
       }).then((r) => {
-        response.json().then((rData) => {
+        r.json().then((rData) => {
         // получили данные и рендерим их в приложении
-        tasks = responseData.string;
+        console.log(rData.string);
+        tasks = rData.string;
       
         renderTasks();
       });

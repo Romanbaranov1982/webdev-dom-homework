@@ -8,40 +8,7 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
+       <!-- рендерится из JS -->
       </ul>
       <div class="add-form">
         <input id="name-form"
@@ -58,45 +25,157 @@
       id="com-form"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button" id="add-button">Написать</button>
+          <button class="add-form-button" id="add-button">Написать </button>
         </div>
       </div>
     </div>
   </body>
 
   <script>
-  
+  // переменные
     const buttonElement = document.getElementById("add-button");
     const listElement = document.getElementById("list");
     const textAdd = document.getElementById("com-form");
     const nameCom = document.getElementById("name-form");
     let data = new Date().toLocaleString();
+    const deleteButton = document.getElementById("del-button");
+    const commentElements = document.querySelectorAll(".comment");
+    const likeBtns = document.querySelectorAll('.likes');
 
-    buttonElement.addEventListener("click", () => {
-const oldCode = listElement.innerHTML;
-if (textAdd.value === "" || nameCom.value === ""){
-  alert("Заполните все поля");
-  return;
-};
-listElement.innerHTML = oldCode + 
-`<li class="comment">
+  // создали массив
+    const cards = [ {
+      name: "Глеб Фокин",
+      time: "12.02.22 12:18",
+      comment: "Это будет первый комментарий на этой странице" ,
+      likesComment: 3,
+      likedStatus: "like-button",
+      // answer:
+    },
+    {
+      name: "Варвара Н",
+      time: "13.02.22 19:22",
+      comment: "Мне нравится как оформлена эта страница! ❤",
+      likesComment: 3,
+      likedStatus: "like-button -active-like",
+
+    },
+  ];   
+   
+  // создаем рендер функцию
+  const renderCards = () => {
+      const cardsHtml = cards
+        .map((card, index, jS, y) => {
+          return `<li class="comment" data-text=" > ${card.comment} , ${card.name} < "> <br>
           <div class="comment-header">
-            <div>${nameCom.value}</div>
-            <div>${data}</div>
+            <div >${card.name} </div>
+            <div>${card.time}</div>
           </div>
-          <div class="comment-body">
-            <div class="comment-text">${textAdd.value}</div>
+                  <div class="comment-body">
+  
+            <div  class="comment-text"  >${card.comment}</div>
           </div>
-          <div class="comment-footer">
+          <div class="comment-footer"> 
             <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button -active-like"></button>
+              <span class="likes-counter">${card.likesComment}</span>  
+              <button class="like-button ${card.likedStatus}" data-like="${index}"></button>
             </div>
           </div>
         </li> `;
+        })
+        .join("");
+      listElement.innerHTML = cardsHtml;  
+      
+    
+      };             
+renderCards();
+
+
+
+// лайки
+    const likeButtonsPush = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener('click', () => {
+      const index = likeButton.dataset.like;
+      if (cards[index].likedStatus === "like-button") {
+        cards[index].likesComment +=1;
+        cards[index].likedStatus = "like-button -active-like";
+        
+      } else if (cards[index].likedStatus === "like-button -active-like"){
+        cards[index].likesComment -=1;
+        cards[index].likedStatus = "like-button";
+       
+      };
+     renderCards();
+     likeButtonsPush();
+    });
+    
+  };
+    };
+likeButtonsPush();  
+
+
+      // добавление коментариев
+    buttonElement.addEventListener("click", () => { 
+
+if (textAdd.value === "" || nameCom.value === ""){
+  alert("Заполните все поля");
+  return;
+    }
+  cards.push({
+    name: nameCom.value.replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;"),       
+    time: data,
+    comment:  textAdd.value.replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;"),
+    likesComment: 0 ,
+    likedStatus: "like-button",
+    
+});
+renderCards();  
+likeButtonsPush();
+cardsAnswerFunc();
+shutdownReplayFunc();  
+
+
         textAdd.value = "";
         nameCom.value = "";
+      
     });
+
+    // ответы на комментарии
+    const cardsAnswerFunc = () => {
+const commentAwrs = document.querySelectorAll('.comment')
+for (const commentAwr of commentAwrs ) {
+  commentAwr.addEventListener('click', () =>{
+  const y = commentAwr.dataset.text; 
+  y.value = y.replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;") ; 
+ const jS =   textAdd.value + y;
+// console.log(jS);
+textAdd.value = jS;  
+  });  
+}
+    };
+// renderCards();
+   
+    // отключение функции replay
+    const shutdownReplayFunc = () => {
+      const likeBtns = document.querySelectorAll('.likes');
+      for (const likeBtn of likeBtns) {
+        likeBtn.addEventListener('click', (event) =>{
+          event.stopPropagation();                            
+        }); 
+  
+      };
+    };
+  // likeButtonsPush();
+ shutdownReplayFunc();  
+cardsAnswerFunc();
+
     console.log("It works!");
   </script>
 </html>

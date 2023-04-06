@@ -42,6 +42,19 @@
     const commentElements = document.querySelectorAll(".comment");
     const likeBtns = document.querySelectorAll('.likes');
 
+    const addObject = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+      method : "GET",
+    });
+    addObject.then((response) =>{
+       response.json()
+     .then((responseData) => {
+        // получили данные и рендерим их в приложении
+        cards = responseData.coments;
+        console.log(responseData);
+        renderCards();
+      });
+    });
+
   // создали массив
     const cards = [ {
       name: "Глеб Фокин",

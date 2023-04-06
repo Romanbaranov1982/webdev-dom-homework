@@ -91,7 +91,7 @@ return{
         })
         .join("");
       listElement.innerHTML = commentsHtml;  
-      likeButtonsPush();
+      // likeButtonsPush();
       reloadPage();
     
       };             
@@ -111,11 +111,18 @@ if (textAdd.value === "" || nameCom.value === ""){
         "text": textAdd.value,
           "name": nameCom.value,
       })
+    }).then((resp) =>{
+      resp.json().then((respData) => {
+        comments = respData.comments;
+        console.log(respData);
+        renderComments();
+      })
     })
       textAdd.value = "";
         nameCom.value = "";
-  renderComments();
+
     });
+  renderComments();
 
     function reloadPage() {
   buttonElement.addEventListener('click', () => {

@@ -179,6 +179,7 @@ textAdd.value = jS;
 
   for (const likeButton of likeButtons) {
     likeButton.addEventListener('click', () => {
+      console.log(1);
       const index = likeButton.dataset.like;
       if (comments[index].likedStatus === "like-button") {
         comments[index].likesComment +=1;
@@ -196,6 +197,7 @@ textAdd.value = jS;
   };
     };
 likeButtonsPush(); 
+renderComments();
     // отключение функции replay
     const shutdownReplayFunc = () => {
       const likeBtns = document.querySelectorAll('.likes');
@@ -211,5 +213,22 @@ likeButtonsPush();
 commentsAnswerFunc();
 
     console.log("It works!");
+    //  fetch("https://webdev-hw-api.vercel.app/api/todos/" + id, {
+        //     method: "DELETE",
+        //   }).then((response) => { 
+        //    return response.json();         
+        // })
+        // .then((responseData) => {
+        //   return fetch("https://webdev-hw-api.vercel.app/api/todos", {
+        //     method: "GET",
+        //   });
+        // })
+        // .then((response) =>{
+        //  return response.json();
+        // })
+        // .then((responseData) =>{
+        //   tasks = responseData.todos;
+        //   renderTasks();
+        // });
   </script>
 </html>

@@ -42,110 +42,122 @@
     const commentElements = document.querySelectorAll(".comment");
     const likeBtns = document.querySelectorAll('.likes');
 
-  // создали массив
-    const cards = [ {
-      name: "Глеб Фокин",
-      time: "12.02.22 12:18",
-      comment: "Это будет первый комментарий на этой странице" ,
-      likesComment: 3,
-      likedStatus: "like-button",
-      // answer:
-    },
-    {
-      name: "Варвара Н",
-      time: "13.02.22 19:22",
-      comment: "Мне нравится как оформлена эта страница! ❤",
-      likesComment: 3,
-      likedStatus: "like-button -active-like",
+     // создали массив
+     let comments = [];   
 
-    },
-  ];   
+     // fetch
+    const addObject = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+      method : "GET",
+    });
+    addObject.then((response) =>{
+       response.json()
+     .then((responseData) => {
+       const appComments = responseData.comments.map((comment) => {
+return{
+  name : comment.author.name,
+  time : new Date(comment.date).toLocaleString() ,
+  commentText : comment.text,
+  likesComment : comment.likes,
+  likedStatus : false,
+};
+       });
+        comments = appComments;
+      
+        renderComments();
+      });
+    });
+   
    
   // создаем рендер функцию
-  const renderCards = () => {
-      const cardsHtml = cards
-        .map((card, index, jS, y) => {
-          return `<li class="comment" data-text=" > ${card.comment} , ${card.name} < "> <br>
+  const renderComments = () => {
+      const commentsHtml = comments
+        .map((comment, index, jS, y) => {
+          return `<li class="comment" data-text=" > ${comment.commentText} , ${comment.name} < "> <br>
           <div class="comment-header">
-            <div >${card.name} </div>
-            <div>${card.time}</div>
+            <div >${comment.name} </div>
+            <div>${comment.time}</div>
           </div>
                   <div class="comment-body">
   
-            <div  class="comment-text"  >${card.comment}</div>
+            <div  class="comment-text"  >${comment.commentText}</div>
           </div>
           <div class="comment-footer"> 
             <div class="likes">
-              <span class="likes-counter">${card.likesComment}</span>  
-              <button class="like-button ${card.likedStatus}" data-like="${index}"></button>
+              <span class="likes-counter">${comment.likesComment}</span>  
+              <button class="like-button ${comment.likedStatus}" data-like="${index}"></button>
             </div>
           </div>
         </li> `;
         })
         .join("");
-      listElement.innerHTML = cardsHtml;  
-      
+      listElement.innerHTML = commentsHtml;  
+      // likeButtonsPush();
+      reloadPage();
     
       };             
-renderCards();
+renderComments();
 
 
 
-// лайки
-    const likeButtonsPush = () => {
-  const likeButtons = document.querySelectorAll(".like-button");
-
-  for (const likeButton of likeButtons) {
-    likeButton.addEventListener('click', () => {
-      const index = likeButton.dataset.like;
-      if (cards[index].likedStatus === "like-button") {
-        cards[index].likesComment +=1;
-        cards[index].likedStatus = "like-button -active-like";
-        
-      } else if (cards[index].likedStatus === "like-button -active-like"){
-        cards[index].likesComment -=1;
-        cards[index].likedStatus = "like-button";
-       
-      };
-     renderCards();
-     likeButtonsPush();
-    });
-    
-  };
-    };
-likeButtonsPush();  
-
-
-      // добавление коментариев
+      // добавление коментариев POST
     buttonElement.addEventListener("click", () => { 
-
 if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
     }
-  cards.push({
-    name: nameCom.value.replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;"),       
-    time: data,
-    comment:  textAdd.value.replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;"),
-    likesComment: 0 ,
-    likedStatus: "like-button",
-    
-});
-renderCards();  
-likeButtonsPush();
-cardsAnswerFunc();
-shutdownReplayFunc();  
-
-
-        textAdd.value = "";
+     fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+      method : "POST",
+      body : JSON.stringify({
+        "text": textAdd.value,
+          "name": nameCom.value,
+      })
+    }).then((resp) =>{
+      resp.json().then((respData) => {
+        comments = respData.comments;
+        console.log(respData);
+        renderComments();
+      })
+    })
+      textAdd.value = "";
         nameCom.value = "";
-      
+
     });
+  renderComments();
+
+    function reloadPage() {
+  buttonElement.addEventListener('click', () => {
+const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+  method: "GET"
+});
+reload.then((res) => {
+  res.json().then((responseData) => {
+    const appComments = responseData.comments.map((comment) => {
+      return {
+        name : comment.author.name,
+  time : new Date(comment.date).toLocaleString() ,
+  commentText : comment.text,
+  likesComment : comment.likes,
+  likedStatus : false,
+      };
+    });
+    comments = appComments;
+    renderComments();
+  });
+});
+
+  });
+}
+reloadPage();
+
+
+   
+// renderComments();  
+// likeButtonsPush();
+// commentsAnswerFunc();
+// shutdownReplayFunc(); 
 
     // ответы на комментарии
-    const cardsAnswerFunc = () => {
+    const commentsAnswerFunc = () => {
 const commentAwrs = document.querySelectorAll('.comment')
 for (const commentAwr of commentAwrs ) {
   commentAwr.addEventListener('click', () =>{
@@ -155,13 +167,35 @@ for (const commentAwr of commentAwrs ) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;") ; 
  const jS =   textAdd.value + y;
-// console.log(jS);
+
 textAdd.value = jS;  
   });  
 }
     };
-// renderCards();
-   
+
+   // лайки
+   const likeButtonsPush = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener('click', () => {
+      const index = likeButton.dataset.like;
+      if (comments[index].likedStatus === "like-button") {
+        comments[index].likesComment +=1;
+        comments[index].likedStatus = "like-button -active-like";
+        
+      } else if (comments[index].likedStatus === "like-button -active-like"){
+        comments[index].likesComment -=1;
+        comments[index].likedStatus = "like-button";
+       
+      };
+     renderComments();
+     likeButtonsPush();
+    });
+    
+  };
+    };
+likeButtonsPush(); 
     // отключение функции replay
     const shutdownReplayFunc = () => {
       const likeBtns = document.querySelectorAll('.likes');
@@ -172,9 +206,9 @@ textAdd.value = jS;
   
       };
     };
-  // likeButtonsPush();
+  likeButtonsPush();
  shutdownReplayFunc();  
-cardsAnswerFunc();
+commentsAnswerFunc();
 
     console.log("It works!");
   </script>

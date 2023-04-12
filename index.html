@@ -44,14 +44,16 @@
     const deleteButton = document.getElementById("del-button");
     const commentElements = document.querySelectorAll(".comment");
     const likeBtns = document.querySelectorAll('.likes');
+    const likeButtons = document.querySelectorAll(".like-button");
     // перменная формы добавления
     const newCommentForm = document.getElementById("addForm");
   // переменная вставки ожидания
      const waitingElement = document.getElementById("waiting");
-console.log(waitingElement);
+
 
      // создали массив
      let comments = [];   
+     
      
      // fetch функция
     const fetchFunction = ()  => {     
@@ -168,8 +170,7 @@ if (textAdd.value === "" || nameCom.value === ""){
     //   })
     adTodo();   
     renderComments();
-    // newCommentForm.style.display = 'block';
-    // waitingElement.style.display = 'none';
+   
       textAdd.value = "";
         nameCom.value = "";
 
@@ -211,8 +212,10 @@ reloadPage();
     // ответы на комментарии
     const commentsAnswerFunc = () => {
 const commentAwrs = document.querySelectorAll('.comment')
+
 for (const commentAwr of commentAwrs ) {
   commentAwr.addEventListener('click', () =>{
+    
   const y = commentAwr.dataset.text; 
   y.value = y.replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -264,7 +267,6 @@ renderComments();
  shutdownReplayFunc();  
 commentsAnswerFunc();
 
-    console.log("It works!");
    
   </script>
 </html>

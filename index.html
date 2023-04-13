@@ -8,9 +8,11 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
+        
        <!-- рендерится из JS -->
       </ul>
-      <div class="add-form">
+      <p class="hidden" id="waiting">Данные сейчас добавляются</p>
+      <div id="addForm" class="add-form">
         <input id="name-form"
           type="text"
           class="add-form-name"
@@ -28,6 +30,7 @@
           <button class="add-form-button" id="add-button">Написать </button>
         </div>
       </div>
+      
     </div>
   </body>
 
@@ -41,32 +44,44 @@
     const deleteButton = document.getElementById("del-button");
     const commentElements = document.querySelectorAll(".comment");
     const likeBtns = document.querySelectorAll('.likes');
+    const likeButtons = document.querySelectorAll(".like-button");
+    // перменная формы добавления
+    const newCommentForm = document.getElementById("addForm");
+  // переменная вставки ожидания
+     const waitingElement = document.getElementById("waiting");
+
 
      // создали массив
      let comments = [];   
 
-     // fetch
-    const addObject = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-      method : "GET",
-    });
-    addObject.then((response) =>{
-       response.json()
-     .then((responseData) => {
-       const appComments = responseData.comments.map((comment) => {
-return{
-  name : comment.author.name,
-  time : new Date(comment.date).toLocaleString() ,
-  commentText : comment.text,
-  likesComment : comment.likes,
-  likedStatus : false,
-};
-       });
-        comments = appComments;
+     listElement.textContent = "Данные загружаются..."; 
       
+     // fetch функция
+    const fetchFunction = ()  => { 
+          
+      fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+      method : "GET",      
+    },
+    )   
+    .then((response) => {     
+      return response.json();
+    })         
+    .then((responseData) => {
+           const appComments = responseData.comments.map((comment) => {
+        
+     return{
+    name : comment.author.name,
+    time : new Date(comment.date).toLocaleString() ,
+    commentText : comment.text,
+    likesComment : comment.likes,
+    likedStatus : false,
+  };
+       });
+        comments = appComments;      
         renderComments();
       });
-    });
-   
+    };
+   fetchFunction();
    
   // создаем рендер функцию
   const renderComments = () => {
@@ -96,34 +111,54 @@ return{
     
       };             
 renderComments();
+likeButtonsPush();
 
-
-
-      // добавление коментариев POST
-    buttonElement.addEventListener("click", () => { 
-if (textAdd.value === "" || nameCom.value === ""){
-  alert("Заполните все поля");
-  return;
-    }
-     fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+// попробуем создать функцию POST
+   const adTodo = () => {
+  fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
       method : "POST",
       body : JSON.stringify({
         "text": textAdd.value,
           "name": nameCom.value,
       })
     }).then((resp) =>{
-      resp.json().then((respData) => {
-        comments = respData.comments;
-        console.log(respData);
-        renderComments();
-      })
+     return resp.json()
     })
+    .then((resp) =>{
+      // newCommentForm.innerHTML = "Данные загружаются...";
+return resp;
+    } )
+.then(() =>{
+  return fetchFunction();
+})
+.then(() =>{
+  newCommentForm.style.display = 'block';
+    waitingElement.style.display = 'none';
+})
+};
+adTodo();
+
+
+      // добавление коментариев POST
+    buttonElement.addEventListener("click", () => { 
+    if (textAdd.value === "" || nameCom.value === ""){
+  alert("Заполните все поля");
+  return;
+    } 
+    newCommentForm.style.display = 'none';
+    waitingElement.style.display = 'block';
+   
+    adTodo();   
+    renderComments();
+   
       textAdd.value = "";
         nameCom.value = "";
 
     });
   renderComments();
+  likeButtonsPush();
 
+// Заполнение массива данными из API
     function reloadPage() {
   buttonElement.addEventListener('click', () => {
 const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
@@ -142,25 +177,22 @@ reload.then((res) => {
     });
     comments = appComments;
     renderComments();
+    likeButtonsPush();
   });
 });
 
   });
 }
-reloadPage();
+reloadPage();  
 
-
-   
-// renderComments();  
-// likeButtonsPush();
-// commentsAnswerFunc();
-// shutdownReplayFunc(); 
 
     // ответы на комментарии
     const commentsAnswerFunc = () => {
 const commentAwrs = document.querySelectorAll('.comment')
+
 for (const commentAwr of commentAwrs ) {
   commentAwr.addEventListener('click', () =>{
+    
   const y = commentAwr.dataset.text; 
   y.value = y.replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -190,14 +222,15 @@ textAdd.value = jS;
         comments[index].likedStatus = "like-button";
        
       };
-     renderComments();
-     likeButtonsPush();
+      renderComments();
+      likeButtonsPush();          
     });
     
   };
     };
+renderComments();    
 likeButtonsPush(); 
-renderComments();
+
     // отключение функции replay
     const shutdownReplayFunc = () => {
       const likeBtns = document.querySelectorAll('.likes');
@@ -212,7 +245,6 @@ renderComments();
  shutdownReplayFunc();  
 commentsAnswerFunc();
 
-    console.log("It works!");
-  
+
   </script>
 </html>

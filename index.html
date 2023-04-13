@@ -53,31 +53,29 @@
 
      // создали массив
      let comments = [];   
-     
-     
+
+     listElement.textContent = "Данные загружаются..."; 
+      
      // fetch функция
-    const fetchFunction = ()  => {     
+    const fetchFunction = ()  => { 
+          
       fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
       method : "GET",      
     },
-    )
-    .then((response) =>{
-         listElement.textContent = "Данные загружаются...";      
-      return response;
-    })
+    )   
     .then((response) => {     
       return response.json();
     })         
     .then((responseData) => {
            const appComments = responseData.comments.map((comment) => {
         
-return{
-  name : comment.author.name,
-  time : new Date(comment.date).toLocaleString() ,
-  commentText : comment.text,
-  likesComment : comment.likes,
-  likedStatus : false,
-};
+     return{
+    name : comment.author.name,
+    time : new Date(comment.date).toLocaleString() ,
+    commentText : comment.text,
+    likesComment : comment.likes,
+    likedStatus : false,
+  };
        });
         comments = appComments;      
         renderComments();
@@ -113,9 +111,10 @@ return{
     
       };             
 renderComments();
+likeButtonsPush();
 
 // попробуем создать функцию POST
-const adTodo = () => {
+   const adTodo = () => {
   fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
       method : "POST",
       body : JSON.stringify({
@@ -142,32 +141,13 @@ adTodo();
 
       // добавление коментариев POST
     buttonElement.addEventListener("click", () => { 
-if (textAdd.value === "" || nameCom.value === ""){
+    if (textAdd.value === "" || nameCom.value === ""){
   alert("Заполните все поля");
   return;
     } 
     newCommentForm.style.display = 'none';
     waitingElement.style.display = 'block';
- 
-    // старый код
-    //  fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-    //   method : "POST",
-    //   body : JSON.stringify({
-    //     "text": textAdd.value,
-    //       "name": nameCom.value,
-    //   })
-    // }).then((resp) =>{
-    //  return resp.json()
-    // })
-    // .then((resp) =>{
-    //   // newCommentForm.textContent = "Данные грузятся";
-    //   return resp;
-    // })
-    //   .then((respData) => {
-    //     comments = respData.comments;
-    //     console.log(respData);
-    //     renderComments();
-    //   })
+   
     adTodo();   
     renderComments();
    
@@ -176,7 +156,9 @@ if (textAdd.value === "" || nameCom.value === ""){
 
     });
   renderComments();
+  likeButtonsPush();
 
+// Заполнение массива данными из API
     function reloadPage() {
   buttonElement.addEventListener('click', () => {
 const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
@@ -195,19 +177,14 @@ reload.then((res) => {
     });
     comments = appComments;
     renderComments();
+    likeButtonsPush();
   });
 });
 
   });
 }
-reloadPage();
+reloadPage();  
 
-
-   
-// renderComments();  
-// likeButtonsPush();
-// commentsAnswerFunc();
-// shutdownReplayFunc(); 
 
     // ответы на комментарии
     const commentsAnswerFunc = () => {
@@ -245,14 +222,15 @@ textAdd.value = jS;
         comments[index].likedStatus = "like-button";
        
       };
-     renderComments();
-     likeButtonsPush();
+      renderComments();
+      likeButtonsPush();          
     });
     
   };
     };
+renderComments();    
 likeButtonsPush(); 
-renderComments();
+
     // отключение функции replay
     const shutdownReplayFunc = () => {
       const likeBtns = document.querySelectorAll('.likes');

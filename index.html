@@ -54,15 +54,21 @@
      // создали массив
      let comments = [];   
 
-     listElement.textContent = "Данные загружаются..."; 
       
-     // fetch функция
+      listElement.innerHTML = "Данные загружаются..."; 
+     // get функция
     const fetchFunction = ()  => { 
-          
+         
       fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
       method : "GET",      
     },
-    )   
+    )  
+    .then((response) =>{
+        if(response.status === 500){
+            throw new Error("Сервер упал");
+        }        
+        return response;
+    }) 
     .then((response) => {     
       return response.json();
     })         
@@ -79,7 +85,13 @@
        });
         comments = appComments;      
         renderComments();
-      });
+      })
+      .catch((error)=>{
+        if (error.message === "Сервер упал"){
+            alert("Сервер упал");
+        } 
+        alert('Проблемы с  Wifi');      
+      })
     };
    fetchFunction();
    
@@ -106,12 +118,12 @@
         })
         .join("");
       listElement.innerHTML = commentsHtml;  
-      // likeButtonsPush();
-      reloadPage();
+      
+    //   reloadPage();
     
       };             
 renderComments();
-likeButtonsPush();
+
 
 // попробуем создать функцию POST
    const adTodo = () => {
@@ -120,21 +132,48 @@ likeButtonsPush();
       body : JSON.stringify({
         "text": textAdd.value,
           "name": nameCom.value,
+          forceError: true,
       })
-    }).then((resp) =>{
-     return resp.json()
     })
     .then((resp) =>{
-      // newCommentForm.innerHTML = "Данные загружаются...";
-return resp;
-    } )
+      if (resp.status === 400){     
+        throw new Error ("Количество символов не должно быть меньше трех"); 
+            }
+      if (resp.status === 500){
+        throw new Error("Сервер упал");
+      }         
+       else
+     return resp.json();
+    })  
 .then(() =>{
   return fetchFunction();
 })
 .then(() =>{
   newCommentForm.style.display = 'block';
     waitingElement.style.display = 'none';
+     textAdd.value = "";
+     nameCom.value = "";
 })
+.catch((error)=>{
+if (error.message === 'Количество символов не должно быть меньше трех' ) {
+alert("Допишите больше символов");
+newCommentForm.style.display = 'block';
+waitingElement.style.display = 'none';
+return;
+adTodo(); 
+}
+if(error.message === "Сервер упал") {
+    alert("Сервер временно не работает, попробуйте позже");
+    newCommentForm.style.display = 'block';
+waitingElement.style.display = 'none';
+    adTodo();
+}
+else {
+    alert('Проблемы с интернетом');
+    newCommentForm.style.display = 'block';
+waitingElement.style.display = 'none';
+}
+});
 };
 adTodo();
 
@@ -151,39 +190,38 @@ adTodo();
     adTodo();   
     renderComments();
    
-      textAdd.value = "";
-        nameCom.value = "";
+     
 
     });
   renderComments();
-  likeButtonsPush();
+//   
 
 // Заполнение массива данными из API
-    function reloadPage() {
-  buttonElement.addEventListener('click', () => {
-const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-  method: "GET"
-});
-reload.then((res) => {
-  res.json().then((responseData) => {
-    const appComments = responseData.comments.map((comment) => {
-      return {
-        name : comment.author.name,
-  time : new Date(comment.date).toLocaleString() ,
-  commentText : comment.text,
-  likesComment : comment.likes,
-  likedStatus : false,
-      };
-    });
-    comments = appComments;
-    renderComments();
-    likeButtonsPush();
-  });
-});
+//     function reloadPage() {
+//   buttonElement.addEventListener('click', () => {
+// const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+//   method: "GET"
+// });
+// reload.then((res) => {
+//   res.json().then((responseData) => {
+//     const appComments = responseData.comments.map((comment) => {
+//       return {
+//         name : comment.author.name,
+//   time : new Date(comment.date).toLocaleString() ,
+//   commentText : comment.text,
+//   likesComment : comment.likes,
+//   likedStatus : false,
+//       };
+//     });
+//     comments = appComments;
+//     renderComments();
+  
+//   });
+// });
 
-  });
-}
-reloadPage();  
+//   });
+// }
+// reloadPage();  
 
 
     // ответы на комментарии

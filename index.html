@@ -8,34 +8,33 @@
   <body>
     <div class="container">
       <ul class="comments" id="list">
-        
-       <!-- рендерится из JS -->
+        <!-- рендерится из JS -->
       </ul>
       <p class="hidden" id="waiting">Данные сейчас добавляются</p>
       <div id="addForm" class="add-form">
-        <input id="name-form"
+        <input
+          id="name-form"
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
           value=""
         />
-        <textarea 
+        <textarea
           type="textarea"
           class="add-form-text"
           placeholder="Введите ваш коментарий"
           rows="4"
-      id="com-form"
+          id="com-form"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button" id="add-button">Написать </button>
+          <button class="add-form-button" id="add-button">Написать</button>
         </div>
       </div>
-      
     </div>
   </body>
 
   <script>
-  // переменные
+    // переменные
     const buttonElement = document.getElementById("add-button");
     const listElement = document.getElementById("list");
     const textAdd = document.getElementById("com-form");
@@ -43,60 +42,50 @@
     let data = new Date().toLocaleString();
     const deleteButton = document.getElementById("del-button");
     const commentElements = document.querySelectorAll(".comment");
-    const likeBtns = document.querySelectorAll('.likes');
+    const likeBtns = document.querySelectorAll(".likes");
     const likeButtons = document.querySelectorAll(".like-button");
     // перменная формы добавления
     const newCommentForm = document.getElementById("addForm");
-  // переменная вставки ожидания
-     const waitingElement = document.getElementById("waiting");
+    // переменная вставки ожидания
+    const waitingElement = document.getElementById("waiting");
 
+    // создали массив
+    let comments = [];
 
-     // создали массив
-     let comments = [];   
-
+    
+    // get функция
+    const fetchFunction = () => {
       
-      listElement.innerHTML = "Данные загружаются..."; 
-     // get функция
-    const fetchFunction = ()  => { 
-         
       fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-      method : "GET",      
-    },
-    )  
-    .then((response) =>{
-        if(response.status === 500){
-            throw new Error("Сервер упал");
-        }        
+        method: "GET",
+      })
+      .then((response) =>{
+        listElement.innerHTML = "Данные загружаются...";
         return response;
-    }) 
-    .then((response) => {     
-      return response.json();
-    })         
-    .then((responseData) => {
-           const appComments = responseData.comments.map((comment) => {
-        
-     return{
-    name : comment.author.name,
-    time : new Date(comment.date).toLocaleString() ,
-    commentText : comment.text,
-    likesComment : comment.likes,
-    likedStatus : false,
-  };
-       });
-        comments = appComments;      
-        renderComments();
-      })
-      .catch((error)=>{
-        if (error.message === "Сервер упал"){
-            alert("Сервер упал");
-        } 
-        alert('Проблемы с  Wifi');      
-      })
+      })      
+        .then((response) => {
+          return response.json();
+        })
+        .then((responseData) => {
+          const appComments = responseData.comments.map((comment) => {
+            return {
+              name: comment.author.name,
+              time: new Date(comment.date).toLocaleString(),
+              commentText: comment.text,
+              likesComment: comment.likes,
+              likedStatus: false,
+            };
+          });
+          
+          comments = appComments;
+          renderComments();
+        })
+       
     };
-   fetchFunction();
-   
-  // создаем рендер функцию
-  const renderComments = () => {
+    fetchFunction();
+
+    // создаем рендер функцию
+    const renderComments = () => {
       const commentsHtml = comments
         .map((comment, index, jS, y) => {
           return `<li class="comment" data-text=" > ${comment.commentText} , ${comment.name} < "> <br>
@@ -117,172 +106,158 @@
         </li> `;
         })
         .join("");
-      listElement.innerHTML = commentsHtml;  
-      
-    //   reloadPage();
-    
-      };             
-renderComments();
+      listElement.innerHTML = commentsHtml;
 
-
-// попробуем создать функцию POST
-   const adTodo = () => {
-  fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-      method : "POST",
-      body : JSON.stringify({
-        "text": textAdd.value,
-          "name": nameCom.value,
-          forceError: true,
-      })
-    })
-    .then((resp) =>{
-      if (resp.status === 400){     
-        throw new Error ("Количество символов не должно быть меньше трех"); 
-            }
-      if (resp.status === 500){
-        throw new Error("Сервер упал");
-      }         
-       else
-     return resp.json();
-    })  
-.then(() =>{
-  return fetchFunction();
-})
-.then(() =>{
-  newCommentForm.style.display = 'block';
-    waitingElement.style.display = 'none';
-     textAdd.value = "";
-     nameCom.value = "";
-})
-.catch((error)=>{
-if (error.message === 'Количество символов не должно быть меньше трех' ) {
-alert("Допишите больше символов");
-newCommentForm.style.display = 'block';
-waitingElement.style.display = 'none';
-return;
-adTodo(); 
-}
-if(error.message === "Сервер упал") {
-    alert("Сервер временно не работает, попробуйте позже");
-    newCommentForm.style.display = 'block';
-waitingElement.style.display = 'none';
-    adTodo();
-}
-else {
-    alert('Проблемы с интернетом');
-    newCommentForm.style.display = 'block';
-waitingElement.style.display = 'none';
-}
-});
-};
-adTodo();
-
-
-      // добавление коментариев POST
-    buttonElement.addEventListener("click", () => { 
-    if (textAdd.value === "" || nameCom.value === ""){
-  alert("Заполните все поля");
-  return;
-    } 
-    newCommentForm.style.display = 'none';
-    waitingElement.style.display = 'block';
-   
-    adTodo();   
+      //   reloadPage();
+    };
     renderComments();
-   
-     
 
+    // попробуем создать функцию POST
+    const adTodo = () => {
+      fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+        method: "POST",
+        body: JSON.stringify({
+          text: textAdd.value,
+          name: nameCom.value,
+          forceError: true,
+        }),
+      })
+        .then((resp) => {
+          if (resp.status === 400) {
+            throw new Error("Количество символов не должно быть меньше трех");
+          }
+          if (resp.status === 500) {
+            throw new Error("Сервер упал");
+          } else return resp.json();
+        })
+        .then(() => {
+          return fetchFunction();
+        })
+        .then(() => {
+          newCommentForm.style.display = "block";
+          waitingElement.style.display = "none";
+          textAdd.value = "";
+          nameCom.value = "";
+        })
+        .catch((error) => {
+          if (
+            error.message === "Количество символов не должно быть меньше трех"
+          ) {
+            alert("Допишите больше символов");
+            newCommentForm.style.display = "block";
+            waitingElement.style.display = "none";
+            return;           
+          }
+          if (error.message === "Сервер упал") {
+            alert("Сервер временно не работает, попробуйте позже");
+            newCommentForm.style.display = "block";
+            waitingElement.style.display = "none";
+            // Здесь adTodo() необходима для дополнительного задания
+            adTodo();
+          } else {
+            alert("Проблемы с интернетом");
+            newCommentForm.style.display = "block";
+            waitingElement.style.display = "none";
+          }
+        });
+    };
+    
+    // добавление коментариев POST
+    buttonElement.addEventListener("click", () => {
+      if (textAdd.value === "" || nameCom.value === "") {
+        alert("Заполните все поля");
+        return;
+      }
+      newCommentForm.style.display = "none";
+      waitingElement.style.display = "block";
+      adTodo();
+      renderComments();
     });
-  renderComments();
-//   
+    renderComments();
+    //
 
-// Заполнение массива данными из API
-//     function reloadPage() {
-//   buttonElement.addEventListener('click', () => {
-// const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-//   method: "GET"
-// });
-// reload.then((res) => {
-//   res.json().then((responseData) => {
-//     const appComments = responseData.comments.map((comment) => {
-//       return {
-//         name : comment.author.name,
-//   time : new Date(comment.date).toLocaleString() ,
-//   commentText : comment.text,
-//   likesComment : comment.likes,
-//   likedStatus : false,
-//       };
-//     });
-//     comments = appComments;
-//     renderComments();
-  
-//   });
-// });
+    // Заполнение массива данными из API
+    //     function reloadPage() {
+    //   buttonElement.addEventListener('click', () => {
+    // const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+    //   method: "GET"
+    // });
+    // reload.then((res) => {
+    //   res.json().then((responseData) => {
+    //     const appComments = responseData.comments.map((comment) => {
+    //       return {
+    //         name : comment.author.name,
+    //   time : new Date(comment.date).toLocaleString() ,
+    //   commentText : comment.text,
+    //   likesComment : comment.likes,
+    //   likedStatus : false,
+    //       };
+    //     });
+    //     comments = appComments;
+    //     renderComments();
 
-//   });
-// }
-// reloadPage();  
+    //   });
+    // });
 
+    //   });
+    // }
+    // reloadPage();
 
     // ответы на комментарии
     const commentsAnswerFunc = () => {
-const commentAwrs = document.querySelectorAll('.comment')
+      const commentAwrs = document.querySelectorAll(".comment");
 
-for (const commentAwr of commentAwrs ) {
-  commentAwr.addEventListener('click', () =>{
-    
-  const y = commentAwr.dataset.text; 
-  y.value = y.replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;") ; 
- const jS =   textAdd.value + y;
+      for (const commentAwr of commentAwrs) {
+        commentAwr.addEventListener("click", () => {
+          const y = commentAwr.dataset.text;
+          y.value = y
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;");
+          const jS = textAdd.value + y;
 
-textAdd.value = jS;  
-  });  
-}
+          textAdd.value = jS;
+        });
+      }
     };
 
-   // лайки
-   const likeButtonsPush = () => {
-  const likeButtons = document.querySelectorAll(".like-button");
+    // лайки
+    const likeButtonsPush = () => {
+      const likeButtons = document.querySelectorAll(".like-button");
 
-  for (const likeButton of likeButtons) {
-    likeButton.addEventListener('click', () => {
-      console.log(1);
-      const index = likeButton.dataset.like;
-      if (comments[index].likedStatus === "like-button") {
-        comments[index].likesComment +=1;
-        comments[index].likedStatus = "like-button -active-like";
-        
-      } else if (comments[index].likedStatus === "like-button -active-like"){
-        comments[index].likesComment -=1;
-        comments[index].likedStatus = "like-button";
-       
-      };
-      renderComments();
-      likeButtonsPush();          
-    });
-    
-  };
+      for (const likeButton of likeButtons) {
+        likeButton.addEventListener("click", () => {
+          console.log(1);
+          const index = likeButton.dataset.like;
+          if (comments[index].likedStatus === "like-button") {
+            comments[index].likesComment += 1;
+            comments[index].likedStatus = "like-button -active-like";
+          } else if (
+            comments[index].likedStatus === "like-button -active-like"
+          ) {
+            comments[index].likesComment -= 1;
+            comments[index].likedStatus = "like-button";
+          }
+          renderComments();
+          likeButtonsPush();
+        });
+      }
     };
-renderComments();    
-likeButtonsPush(); 
+    renderComments();
+    likeButtonsPush();
 
     // отключение функции replay
     const shutdownReplayFunc = () => {
-      const likeBtns = document.querySelectorAll('.likes');
+      const likeBtns = document.querySelectorAll(".likes");
       for (const likeBtn of likeBtns) {
-        likeBtn.addEventListener('click', (event) =>{
-          event.stopPropagation();                            
-        }); 
-  
-      };
+        likeBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+        });
+      }
     };
-  likeButtonsPush();
- shutdownReplayFunc();  
-commentsAnswerFunc();
-
-
+    likeButtonsPush();
+    shutdownReplayFunc();
+    commentsAnswerFunc();
   </script>
 </html>

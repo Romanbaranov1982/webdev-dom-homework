@@ -100,7 +100,7 @@
               time: new Date(comment.date).toLocaleString(),
               commentText: comment.text,
               likesComment: comment.likes,
-              likedStatus: comment.isLiked,
+              likedStatus: "like-button",
             };
           });
 
@@ -203,33 +203,7 @@
     renderComments();
     //
 
-    // Заполнение массива данными из API
-    //     function reloadPage() {
-    //   buttonElement.addEventListener('click', () => {
-    // const reload = fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
-    //   method: "GET"
-    // });
-    // reload.then((res) => {
-    //   res.json().then((responseData) => {
-    //     const appComments = responseData.comments.map((comment) => {
-    //       return {
-    //         name : comment.author.name,
-    //   time : new Date(comment.date).toLocaleString() ,
-    //   commentText : comment.text,
-    //   likesComment : comment.likes,
-    //   likedStatus : false,
-    //       };
-    //     });
-    //     comments = appComments;
-    //     renderComments();
-
-    //   });
-    // });
-
-    //   });
-    // }
-    // reloadPage();
-
+   
     // ответы на комментарии
     const commentsAnswerFunc = () => {
       const commentAwrs = document.querySelectorAll(".comment");
@@ -248,20 +222,11 @@
         });
       }
     };
+  
 
-    
 
-    // // отключение функции replay
-    // const shutdownReplayFunc = () => {
-    //   const likeBtns = document.querySelectorAll(".likes");
-    //   for (const likeBtn of likeBtns) {
-    //     likeBtn.addEventListener("click", (event) => {
-    //       event.stopPropagation();
-    //     });
-    //   }
-    // };
     likeButtonsPush();
-    // shutdownReplayFunc();
+   
     commentsAnswerFunc();
   </script>
 </html>

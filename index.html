@@ -49,20 +49,47 @@
     // переменная вставки ожидания
     const waitingElement = document.getElementById("waiting");
 
+
+
+
     // создали массив
     let comments = [];
 
-    
+// лайки
+    const likeButtonsPush = () => {
+      const likeButtons = document.querySelectorAll(".like-button");
+
+      for (const likeButton of likeButtons) {
+        likeButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          console.log(1);
+          const index = likeButton.dataset.like;
+          if (comments[index].likedStatus === "like-button") {
+            comments[index].likesComment += 1;
+            comments[index].likedStatus = "like-button -active-like";
+          } else if (
+            comments[index].likedStatus === "like-button -active-like"
+          ) {
+            comments[index].likesComment -= 1;
+            comments[index].likedStatus = "like-button";
+          }
+          renderComments();
+          // likeButtonsPush();
+        });
+      }
+    };
+    // renderComments();
+    likeButtonsPush();
+
     // get функция
     const fetchFunction = () => {
-      
       fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
         method: "GET",
       })
-      .then((response) =>{
-        listElement.innerHTML = "Данные загружаются...";
-        return response;
-      })      
+        .then((response) => {
+          listElement.innerHTML = "Данные загружаются...";
+          return response;
+        })
         .then((response) => {
           return response.json();
         })
@@ -73,14 +100,13 @@
               time: new Date(comment.date).toLocaleString(),
               commentText: comment.text,
               likesComment: comment.likes,
-              likedStatus: false,
+              likedStatus: comment.isLiked,
             };
           });
-          
+
           comments = appComments;
           renderComments();
-        })
-       
+        });
     };
     fetchFunction();
 
@@ -107,6 +133,7 @@
         })
         .join("");
       listElement.innerHTML = commentsHtml;
+      likeButtonsPush();
 
       //   reloadPage();
     };
@@ -134,7 +161,7 @@
           return fetchFunction();
         })
         .then(() => {
-          newCommentForm.style.display = "block";
+          newCommentForm.style.display = "flex";
           waitingElement.style.display = "none";
           textAdd.value = "";
           nameCom.value = "";
@@ -144,24 +171,24 @@
             error.message === "Количество символов не должно быть меньше трех"
           ) {
             alert("Допишите больше символов");
-            newCommentForm.style.display = "block";
+            newCommentForm.style.display = "flex";
             waitingElement.style.display = "none";
-            return;           
+            return;
           }
           if (error.message === "Сервер упал") {
             alert("Сервер временно не работает, попробуйте позже");
-            newCommentForm.style.display = "block";
+            newCommentForm.style.display = "flex";
             waitingElement.style.display = "none";
             // Здесь adTodo() необходима для дополнительного задания
             adTodo();
           } else {
             alert("Проблемы с интернетом");
-            newCommentForm.style.display = "block";
+            newCommentForm.style.display = "flex";
             waitingElement.style.display = "none";
           }
         });
     };
-    
+
     // добавление коментариев POST
     buttonElement.addEventListener("click", () => {
       if (textAdd.value === "" || nameCom.value === "") {
@@ -169,7 +196,7 @@
         return;
       }
       newCommentForm.style.display = "none";
-      waitingElement.style.display = "block";
+      waitingElement.style.display = "flex";
       adTodo();
       renderComments();
     });
@@ -222,42 +249,19 @@
       }
     };
 
-    // лайки
-    const likeButtonsPush = () => {
-      const likeButtons = document.querySelectorAll(".like-button");
+    
 
-      for (const likeButton of likeButtons) {
-        likeButton.addEventListener("click", () => {
-          console.log(1);
-          const index = likeButton.dataset.like;
-          if (comments[index].likedStatus === "like-button") {
-            comments[index].likesComment += 1;
-            comments[index].likedStatus = "like-button -active-like";
-          } else if (
-            comments[index].likedStatus === "like-button -active-like"
-          ) {
-            comments[index].likesComment -= 1;
-            comments[index].likedStatus = "like-button";
-          }
-          renderComments();
-          likeButtonsPush();
-        });
-      }
-    };
-    renderComments();
+    // // отключение функции replay
+    // const shutdownReplayFunc = () => {
+    //   const likeBtns = document.querySelectorAll(".likes");
+    //   for (const likeBtn of likeBtns) {
+    //     likeBtn.addEventListener("click", (event) => {
+    //       event.stopPropagation();
+    //     });
+    //   }
+    // };
     likeButtonsPush();
-
-    // отключение функции replay
-    const shutdownReplayFunc = () => {
-      const likeBtns = document.querySelectorAll(".likes");
-      for (const likeBtn of likeBtns) {
-        likeBtn.addEventListener("click", (event) => {
-          event.stopPropagation();
-        });
-      }
-    };
-    likeButtonsPush();
-    shutdownReplayFunc();
+    // shutdownReplayFunc();
     commentsAnswerFunc();
   </script>
 </html>

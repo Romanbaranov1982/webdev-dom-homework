@@ -3,6 +3,7 @@ import renderComments from "./Render.js";
 const buttonElement = document.getElementById("add-button");
 const textAdd = document.getElementById("text-input");
 const nameCom = document.getElementById("name-input");
+const listElement = document.getElementById("list");
 // перменная формы добавления
 const newCommentForm = document.getElementById("addForm");
 // переменная вставки ожидания
@@ -34,7 +35,7 @@ const getFunction = () => {
       });
 
       comments = appComments;
-      renderComments();
+      renderComments(comments);
     });
 };
 getFunction();
@@ -88,4 +89,5 @@ const adTodo = () => {
       }
     });
 };
+// adTodo();
 export {getFunction, adTodo, comments};

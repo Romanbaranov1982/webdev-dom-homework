@@ -53,5 +53,5 @@ const renderComments = (comments) => {
 //   renderComments();
 
   
-  export default renderComments;
-  export {likeButtonsPush}; 
+  // export default renderComments;
+  export {renderComments, likeButtonsPush}; 

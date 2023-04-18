@@ -1,8 +1,8 @@
-import { comments } from "./api.js";
+// import { comments } from "./api.js";
 import { getFunction } from "./api.js";
 import { adTodo } from "./api.js";
 import { likeButtonsPush } from "./Render.js";
-import renderComments from "./Render.js";
+// import {renderComments} from "./Render.js";
 
 // переменные
 const buttonElement = document.getElementById("add-button");
@@ -15,7 +15,7 @@ const waitingElement = document.getElementById("waiting");
 
 likeButtonsPush();
 getFunction();
-renderComments(comments);
+// renderComments(comments);
 
 
 // добавление коментариев POST
@@ -27,9 +27,9 @@ buttonElement.addEventListener("click", () => {
   newCommentForm.style.display = "none";
   waitingElement.style.display = "flex";
   adTodo();
-  renderComments(comments);
+  // renderComments(comments);
 });
-renderComments(comments);
+// renderComments(comments);
 //
 
 

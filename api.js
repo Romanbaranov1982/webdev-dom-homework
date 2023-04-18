@@ -1,4 +1,4 @@
-import renderComments from "./Render.js";
+import {renderComments} from "./Render.js";
 
 const buttonElement = document.getElementById("add-button");
 const textAdd = document.getElementById("text-input");
@@ -34,8 +34,8 @@ const getFunction = () => {
         };
       });
 
-      comments = appComments;
-      renderComments(comments);
+      // comments = appComments;
+      renderComments(appComments);
     });
 };
 getFunction();

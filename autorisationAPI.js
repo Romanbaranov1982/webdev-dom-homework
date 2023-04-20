@@ -42,7 +42,7 @@ export function addTodo({ token, text}) {
           return response.json();
         })
 };
-
+// обработчик логина в АПИ
 export function loginUser ({ login, password}) {
   return  fetch('https://webdev-hw-api.vercel.app/api/user/login', {
       method: "POST",
@@ -55,6 +55,24 @@ export function loginUser ({ login, password}) {
       .then((response) => {
         if(response.status === 400){
           throw new Error("Неверный логин или пароль ")
+        }
+        return response.json();
+      })
+};
+// обработка имени в АПИ 
+export function registerUser ({ login, password, name}) {
+  return  fetch('https://webdev-hw-api.vercel.app/api/user', {
+      method: "POST",
+      body: JSON.stringify({
+        login,
+        password,  
+        name,                
+      }),
+      
+    })
+      .then((response) => {
+        if(response.status === 400){
+          throw new Error("Такой пользователь уже существует ")
         }
         return response.json();
       })

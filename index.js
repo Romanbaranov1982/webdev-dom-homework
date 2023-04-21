@@ -27,28 +27,5 @@ buttonElement.addEventListener("click", () => {
   newCommentForm.style.display = "none";
   waitingElement.style.display = "flex";
   adTodo();
-  // renderComments(comments);
+  
 });
-// renderComments(comments);
-//
-
-
-// // ответы на комментарии
-// const commentsAnswerFunc = () => {
-//   const commentAwrs = document.querySelectorAll(".comment");
-
-//   for (const commentAwr of commentAwrs) {
-//     commentAwr.addEventListener("click", () => {
-//       const y = commentAwr.dataset.text;
-//       y.value = y
-//         .replaceAll("&", "&amp;")
-//         .replaceAll("<", "&lt;")
-//         .replaceAll(">", "&gt;")
-//         .replaceAll('"', "&quot;");
-//       const jS = textAdd.value + y;
-
-//       textAdd.value = jS;
-//     });
-//   }
-// };
-// commentsAnswerFunc();

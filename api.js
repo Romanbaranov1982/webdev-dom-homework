@@ -39,7 +39,7 @@ const getFunction = () => {
     });
 };
 getFunction();
-
+// https://webdev-hw-api.vercel.app/api/user
 // попробуем создать функцию POST
 const adTodo = () => {
   fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {

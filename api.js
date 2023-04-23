@@ -9,12 +9,18 @@ const newCommentForm = document.getElementById("addForm");
 // переменная вставки ожидания
 const waitingElement = document.getElementById("waiting");
 
-
  let comments = [];
+ let host = "https://webdev-hw-api.vercel.app/api/";
+ let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
  // get функция
 const getFunction = () => {
-  fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+  
+  fetch(host + `v2/roman-baranov/comments`, {
     method: "GET",
+    headers:{
+      Authorization: token,
+    },
+    
   })
     .then((response) => {
       listElement.innerHTML = "Данные загружаются...";
@@ -22,6 +28,7 @@ const getFunction = () => {
     })
     .then((response) => {
       return response.json();
+      
     })
     .then((responseData) => {
       const appComments = responseData.comments.map((comment) => {
@@ -39,25 +46,41 @@ const getFunction = () => {
     });
 };
 getFunction();
-// https://webdev-hw-api.vercel.app/api/user
+
 // попробуем создать функцию POST
 const adTodo = () => {
-  fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+  fetch("https://webdev-hw-api.vercel.app/api/user/login", {
     method: "POST",
     body: JSON.stringify({
-      text: textAdd.value,
-      name: nameCom.value,
+      login: "admin",
+      password: "admin",
     //   forceError: true,
     }),
+    // headers: {
+    //   Authorization: token,
+    // },    
   })
+  // fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+  //   method: "POST",
+  //   body: JSON.stringify({
+  //     text: textAdd.value,
+  //     name: nameCom.value,
+  //   //   forceError: true,
+  //   }),
+  //   headers:{
+  //     Authorization: token,
+  //   },
+  // })
     .then((resp) => {
+      // console.log(resp);
       if (resp.status === 400) {
         throw new Error("Количество символов не должно быть меньше трех");
       }
       if (resp.status === 500) {
         throw new Error("Сервер упал");
       } else return resp.json();
-    })
+      
+    })   
     .then(() => {
       return getFunction();
     })
@@ -89,5 +112,5 @@ const adTodo = () => {
       }
     });
 };
-// adTodo();
+
 export {getFunction, adTodo, comments};

@@ -47,11 +47,7 @@ const renderComments = (comments) => {
       })
       .join("");
     listElement.innerHTML = commentsHtml;
-    // console.log(listElement.innerHTML);
+   
     likeButtonsPush(comments);  
   };
-//   renderComments();
-
-  
-  // export default renderComments;
   export {renderComments, likeButtonsPush}; 

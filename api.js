@@ -40,8 +40,7 @@ const getFunction = () => {
           likedStatus: "like-button",
         };
       });
-
-      // comments = appComments;
+     
       renderComments(appComments);
     });
 };
@@ -49,28 +48,28 @@ getFunction();
 
 // попробуем создать функцию POST
 const adTodo = () => {
-  fetch("https://webdev-hw-api.vercel.app/api/user/login", {
-    method: "POST",
-    body: JSON.stringify({
-      login: "admin",
-      password: "admin",
-    //   forceError: true,
-    }),
-    // headers: {
-    //   Authorization: token,
-    // },    
-  })
-  // fetch("https://webdev-hw-api.vercel.app/api/v1/roman-baranov/comments", {
+  // fetch("https://webdev-hw-api.vercel.app/api/user/login", {
   //   method: "POST",
   //   body: JSON.stringify({
-  //     text: textAdd.value,
-  //     name: nameCom.value,
+  //     login: "admin",
+  //     password: "admin",
   //   //   forceError: true,
   //   }),
-  //   headers:{
+  //   headers: {
   //     Authorization: token,
-  //   },
+  //   },    
   // })
+  fetch("https://webdev-hw-api.vercel.app/api/v2/roman-baranov/comments", {
+    method: "POST",
+    body: JSON.stringify({
+      text: textAdd.value,
+      name: nameCom.value,
+    //   forceError: true,
+    }),
+    headers:{
+      Authorization: token,
+    },
+  })
     .then((resp) => {
       // console.log(resp);
       if (resp.status === 400) {

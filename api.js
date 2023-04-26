@@ -9,9 +9,13 @@ const newCommentForm = document.getElementById("addForm");
 // переменная вставки ожидания
 const waitingElement = document.getElementById("waiting");
 
+
+
+
  let comments = [];
  let host = "https://webdev-hw-api.vercel.app/api/";
  let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
+//  token = null;
  // get функция
 const getFunction = () => {
   
@@ -23,7 +27,7 @@ const getFunction = () => {
     
   })
     .then((response) => {
-      listElement.innerHTML = "Данные загружаются...";
+      // listElement.innerHTML = "Данные загружаются...";
       return response;
     })
     .then((response) => {
@@ -42,23 +46,16 @@ const getFunction = () => {
       });
      
       renderComments(appComments);
+   
+      
     });
 };
 getFunction();
 
-// попробуем создать функцию POST
+//  функция добавления комментариев POST
 const adTodo = () => {
-  // fetch("https://webdev-hw-api.vercel.app/api/user/login", {
-  //   method: "POST",
-  //   body: JSON.stringify({
-  //     login: "admin",
-  //     password: "admin",
-  //   //   forceError: true,
-  //   }),
-  //   headers: {
-  //     Authorization: token,
-  //   },    
-  // })
+  const textAdd = document.getElementById("text-input");
+  const nameCom = document.getElementById("name-input");
   fetch("https://webdev-hw-api.vercel.app/api/v2/roman-baranov/comments", {
     method: "POST",
     body: JSON.stringify({
@@ -83,6 +80,7 @@ const adTodo = () => {
     .then(() => {
       return getFunction();
     })
+    
     .then(() => {
       newCommentForm.style.display = "flex";
       waitingElement.style.display = "none";
@@ -112,4 +110,4 @@ const adTodo = () => {
     });
 };
 
-export {getFunction, adTodo, comments};
+export {getFunction, adTodo, comments, token};

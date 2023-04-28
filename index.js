@@ -62,11 +62,15 @@ import { getComments, addComment} from "./api.js";
         <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"
           id="text-input" ></textarea>
         <div class="add-form-row">
+        <button class="change-btn" id="change-user"> Сменить пользователя</button>
           <button class="add-form-button turn-off" id="add-button">Написать</button>
+           
         </div>
   
       </div>
-    </div>`: `<p>Чтобы добавить комментарий, <a class="toAutorisation" id="toAuto">авторизуйтесь</a></p>`}`;
+    </div>
+    </br>
+       `: `<p>Чтобы добавить комментарий, <a class="toAutorisation" id="toAuto">авторизуйтесь</a></p>`}`;
   
     appEl.innerHTML = appHtml;
   
@@ -91,6 +95,19 @@ import { getComments, addComment} from "./api.js";
     const textInputElement = document.getElementById("text-input");
     const nameInputElement = document.getElementById('name-input');
     nameInputElement.value = user.name;
+    document.getElementById("change-user").addEventListener("click",()=>{
+    token = !token;
+    return renderLoginComponents({
+        appEl,
+        setToken: (newToken) => {
+          token = newToken;
+        },
+        setUser: (newUser) => {
+                user = newUser;
+              },
+        getAndRender
+      });
+  })
   
   
     //Добавление комментария

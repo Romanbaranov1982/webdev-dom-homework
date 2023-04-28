@@ -1,9 +1,9 @@
 import {renderComments} from "./Render.js";
 
-const buttonElement = document.getElementById("add-button");
-const textAdd = document.getElementById("text-input");
-const nameCom = document.getElementById("name-input");
-const listElement = document.getElementById("list");
+// const buttonElement = document.getElementById("add-button");
+// const textAdd = document.getElementById("text-input");
+// const nameCom = document.getElementById("name-input");
+// const listElement = document.getElementById("list");
 // перменная формы добавления
 const newCommentForm = document.getElementById("addForm");
 // переменная вставки ожидания
@@ -15,7 +15,7 @@ const waitingElement = document.getElementById("waiting");
  let comments = [];
  let host = "https://webdev-hw-api.vercel.app/api/";
  let token = "Bearer asb4c4boc86gasb4c4boc86g37w3cc3bo3b83k4g37k3bk3cg3c03ck4k";
-//  token = null;
+ token = null;
  // get функция
 const getFunction = () => {
   

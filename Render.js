@@ -79,8 +79,9 @@ const commentsHtml = comments.map((comment, index, jS, y) => {
       <!-- приглашение к авторизации -->
       <p class="autorisation-string">Чтобы добавить комментарии -  <a href="#" class="autorisaion-link" id="autorisaion-link">авторизуйтесь</a></p>
     `;
+      // кнопка "ссылка на авторизацию"
     document.getElementById("autorisaion-link").addEventListener("click",()=>{
-    // кнопка "ссылка на авторизацию"
+  
       appEl.innerHTML =` <div id="autorisationForm" class="add-form">
         <input
           id="nameAutor-input"
@@ -108,7 +109,11 @@ const commentsHtml = comments.map((comment, index, jS, y) => {
         
         <div class="add-form-row">
           <button class="add-form-button" id="autorisation-button">Авторизоваться</button>
+         
         </div>
+        <br>
+        <p   id="registration-button">Зарегестрироваться</p>
+       
       </div>`;
       // кнопка "Зарегиться\Авторизоваться"
        document.getElementById("autorisation-button").addEventListener("click", () =>{

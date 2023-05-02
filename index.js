@@ -1,5 +1,6 @@
 import { getComments, addComment} from "./api.js";
   import {renderLoginComponents} from "./components/autorisationFunc.js";
+  import { format } from "date-fns";
 
   let comments = [];
   let user = null;
@@ -14,7 +15,7 @@ import { getComments, addComment} from "./api.js";
       const appComments = responseData.comments.map((comment) => {
         return {
           name: comment.author.name,
-          date: new Date(comment.date).toLocaleString(),
+          date: new Date(comment.date),
           text: comment.text,
           likes: comment.likes,
           isLiked: comment.isLiked,
@@ -30,12 +31,13 @@ import { getComments, addComment} from "./api.js";
 // рендер-функция
   const renderComments = () => {
     const appEl = document.getElementById('app');
- 
+    
     const commentsHtml = comments.map((comment, index) => {
+      const createDate = format(new Date(comment.date), 'yyyy-mm-dd hh.mm.ss');
       return `<li class="comment">
       <div class="comment-header">
         <div class="comment-name">${comment.name} </div>
-        <div>${comment.date}</div>
+        <div>${createDate}</div>
       </div>
       <div class="comment-body">
         <div class="comment-text" >
